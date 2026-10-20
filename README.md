@@ -171,6 +171,29 @@ brew install --cask libreoffice
 - `/opt/homebrew/bin/libreoffice`
 - `/usr/local/bin/libreoffice`
 
+## Xcode 없이 앱으로 실행하기
+
+개발 중에는 Xcode의 `⌘R`로 실행할 수 있지만, Xcode를 종료한 뒤에도 사용하려면
+macOS 앱 번들로 패키징해야 합니다. 저장소의 패키징 스크립트가 Swift 실행 파일과
+`Info.plist`를 `DropConvert.app` 구조로 묶고 로컬 서명합니다.
+
+```sh
+cd ~/Desktop/Yechan/Project/DropConvert
+./Scripts/package-app.sh
+open dist/DropConvert.app
+```
+
+생성된 앱을 응용 프로그램 폴더에 설치하려면 Finder에서 `dist/DropConvert.app`을
+`응용 프로그램`으로 드래그하세요. 터미널에서는 다음처럼 복사할 수 있습니다.
+
+```sh
+cp -R dist/DropConvert.app /Applications/
+open /Applications/DropConvert.app
+```
+
+이 앱은 개발용 로컬 서명으로 만들어집니다. 공개 배포를 위해서는 Apple Developer
+서명과 공증(notarization)이 추가로 필요합니다.
+
 ## 개발자용 명령
 
 패키지 설정만 확인할 때는 다음 명령을 사용합니다.
@@ -189,4 +212,3 @@ swift test
 
 현재 테스트는 출력 파일명이 이미 존재할 때 자동으로 새 이름을 만드는 동작을
 검증합니다. 실제 macOS 앱 실행과 SwiftUI 빌드는 Xcode 환경에서 확인해야 합니다.
-
