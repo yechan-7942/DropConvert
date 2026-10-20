@@ -7,6 +7,7 @@ APP_DIR="$PROJECT_ROOT/dist/$APP_NAME.app"
 CONTENTS_DIR="$APP_DIR/Contents"
 RESOURCES_DIR="$CONTENTS_DIR/Resources"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
+ICON_SOURCE="$PROJECT_ROOT/Resources/DropConvertIcon.icns"
 
 cd "$PROJECT_ROOT"
 swift build -c release --product "$APP_NAME"
@@ -15,6 +16,7 @@ BIN_DIR="$(swift build -c release --show-bin-path)"
 rm -rf "$APP_DIR"
 mkdir -p "$RESOURCES_DIR" "$MACOS_DIR"
 cp "$BIN_DIR/$APP_NAME" "$MACOS_DIR/$APP_NAME"
+cp "$ICON_SOURCE" "$RESOURCES_DIR/DropConvertIcon.icns"
 
 cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -28,6 +30,8 @@ cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
   <string>DropConvert</string>
   <key>CFBundleIdentifier</key>
   <string>com.yechan7942.dropconvert</string>
+  <key>CFBundleIconFile</key>
+  <string>DropConvertIcon</string>
   <key>CFBundleName</key>
   <string>DropConvert</string>
   <key>CFBundlePackageType</key>
