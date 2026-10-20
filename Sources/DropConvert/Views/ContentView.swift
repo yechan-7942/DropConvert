@@ -24,7 +24,7 @@ struct ContentView: View {
         }
         .padding(40)
         .onDrop(of: [.fileURL], isTargeted: $isTargeted) { providers in
-            providers.first?.loadObject(ofClass: URL.self) { url, _ in
+            _ = providers.first?.loadObject(ofClass: URL.self) { url, _ in
                 guard let url else { return }
                 Task { @MainActor in viewModel.add(urls: [url]) }
             }
@@ -36,7 +36,7 @@ struct ContentView: View {
         VStack(spacing: 12) {
             Image(systemName: isTargeted ? "arrow.down.circle.fill" : "arrow.down.circle")
                 .font(.system(size: 48))
-                .foregroundStyle(isTargeted ? .accent : .secondary)
+                .foregroundStyle(isTargeted ? Color.accentColor : Color.secondary)
             Text("파일을 이곳으로 드래그하세요")
                 .font(.title3)
             Button("파일 선택") { viewModel.chooseFiles() }
