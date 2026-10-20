@@ -8,6 +8,20 @@ DropConvert는 Finder에서 파일을 끌어다 놓고 원하는 형식을 선�
 줄이고, 원본 파일과 개인정보를 외부로 보내지 않는 것을 목표로 시작했습니다.
 변환 결과는 기본적으로 원본 파일 옆에 저장하며, 원본은 수정하지 않습니다.
 
+## 현재 완료 상태
+
+**Phase 1 MVP와 Xcode 없이 실행할 수 있는 macOS 앱 패키징까지 완료했으며,
+모든 변경 사항은 GitHub `main` 브랜치에 push되어 있습니다.**
+
+- 마지막 커밋: `86bb45f Add custom DropConvert app icon`
+- 원격 저장소: <https://github.com/yechan-7942/DropConvert>
+- 설치된 앱: `/Applications/DropConvert.app`
+- 메뉴 막대에서 앱 열기와 파일 선택 가능
+- DropConvert 전용 양방향 변환 아이콘 적용
+- `swift build`, `swift test`, 앱 번들 코드 서명 검증 완료
+
+현재 설치된 앱은 Xcode를 종료해도 계속 실행할 수 있습니다.
+
 
 ## 왜 만들었는가
 
@@ -194,6 +208,16 @@ open /Applications/DropConvert.app
 이 앱은 개발용 로컬 서명으로 만들어집니다. 공개 배포를 위해서는 Apple Developer
 서명과 공증(notarization)이 추가로 필요합니다.
 
+아이콘을 다시 생성하거나 최신 앱 번들을 만들 때는 다음 명령을 사용합니다.
+
+```sh
+cd ~/Desktop/Yechan/Project/DropConvert
+./Scripts/package-app.sh
+rm -rf /Applications/DropConvert.app
+cp -R dist/DropConvert.app /Applications/DropConvert.app
+open /Applications/DropConvert.app
+```
+
 ## 개발자용 명령
 
 패키지 설정만 확인할 때는 다음 명령을 사용합니다.
@@ -212,3 +236,25 @@ swift test
 
 현재 테스트는 출력 파일명이 이미 존재할 때 자동으로 새 이름을 만드는 동작을
 검증합니다. 실제 macOS 앱 실행과 SwiftUI 빌드는 Xcode 환경에서 확인해야 합니다.
+
+## GitHub 반영 상태
+
+주요 구현은 다음 커밋으로 `origin/main`에 push되었습니다.
+
+```text
+acb23c7  Build Phase 1 macOS conversion MVP
+37e987b  Document DropConvert purpose and setup
+8afe5f1  Fix SwiftUI accent color build error
+afee4a5  Add menu bar quick access
+f885532  Add standalone macOS app packaging
+86bb45f  Add custom DropConvert app icon
+```
+
+현재 로컬 브랜치가 GitHub와 동기화되어 있는지 확인하려면 다음 명령을
+사용합니다. `main...origin/main`만 출력되고 변경 파일이 출력되지 않으면
+push가 완료된 최신 상태입니다.
+
+```sh
+git fetch origin
+git status --short --branch
+```
