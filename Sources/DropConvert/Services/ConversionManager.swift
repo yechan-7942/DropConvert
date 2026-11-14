@@ -7,23 +7,44 @@ struct ConversionManager {
     private let pdfConverter = PDFConverter()
 
     func convert(_ request: ConversionRequest) throws -> ConversionResult {
+        guard ConversionRegistry().outputFormats(for: request.input).contains(request.outputFormat) else {
+            throw ConversionError.unsupportedConversion
+        }
         let output = try outputManager.outputURL(
             for: request.input.url,
             format: request.outputFormat,
             directory: request.outputDirectory
         )
         let inputType = request.input.detectedType
-        if inputType?.identifier == "org.openxmlformats.wordprocessingml.document" &&
-                    request.outputFormat == .pdf {
+        var notice: String?
+        if request.input.isHWP || request.input.isWord {
             let temporaryDirectory = FileManager.default.temporaryDirectory
                 .appendingPathComponent(UUID().uuidString, isDirectory: true)
             try FileManager.default.createDirectory(
                 at: temporaryDirectory, withIntermediateDirectories: true
             )
             defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
-            let generated = try LibreOfficeConverter().convertToPDF(
-                input: request.input.url, outputDirectory: temporaryDirectory
-            )
+            let generated: URL
+            if request.input.isHWP {
+                generated = try HWPConverter().convert(
+                    input: request.input.url, format: request.outputFormat,
+                    outputDirectory: temporaryDirectory
+                )
+            } else if request.outputFormat == .hwp {
+                generated = try HWPExportConverter().convert(
+                    input: request.input.url, outputDirectory: temporaryDirectory
+                )
+            } else if !LibreOfficeConverter.isAvailable {
+                let converted = try FileeDocumentConverter().convert(
+                    input: request.input.url, format: .pdf, directory: temporaryDirectory
+                )
+                generated = converted.output
+                notice = converted.notice
+            } else {
+                generated = try LibreOfficeConverter().convertToPDF(
+                    input: request.input.url, outputDirectory: temporaryDirectory
+                )
+            }
             try FileManager.default.moveItem(at: generated, to: output)
         } else if request.outputFormat == .pdf,
                   let inputType,
@@ -36,6 +57,6 @@ struct ConversionManager {
         } else {
             throw ConversionError.unsupportedConversion
         }
-        return ConversionResult(input: request.input.url, output: output)
+        return ConversionResult(input: request.input.url, output: output, notice: notice)
     }
 }

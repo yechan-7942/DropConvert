@@ -4,3 +4,12 @@ dist/
 DerivedData/
 *.xcodeproj/xcuserdata/
 *.xcuserstate
+.DS_Store
+__pycache__/
+.code-review-graph/
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+/tmp/

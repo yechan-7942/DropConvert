@@ -15,7 +15,8 @@ let package = Package(
         .testTarget(
             name: "DropConvertTests",
             dependencies: ["DropConvert"],
-            path: "Tests/DropConvertTests"
+            path: "Tests/DropConvertTests",
+            resources: [.copy("Fixtures")]
         )
     ]
 )

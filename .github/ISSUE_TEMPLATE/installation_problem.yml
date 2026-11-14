@@ -1,0 +1,32 @@
+name: 앱 실행 또는 문서 도구 설치 문제
+description: 앱이 실행되지 않거나 문서 변환 도구를 설치할 수 없는 문제를 제보합니다.
+title: "[설치] "
+body:
+  - type: markdown
+    attributes:
+      value: 현재 배포본은 Apple Silicon용 베타이며 Apple 공증 미적용입니다. 개인정보가 있는 화면이나 문서는 첨부하지 마세요.
+  - type: input
+    id: environment
+    attributes:
+      label: 앱 버전 / macOS 버전 / Mac 칩
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: 문제가 생긴 단계
+      options:
+        - DMG 다운로드 또는 열기
+        - 앱 실행
+        - 문서 도구 다운로드
+        - 문서 도구 설치 또는 설치 결과 확인
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: 재현 순서와 오류 문구
+      description: 마지막으로 표시된 설치 단계와 다시 시도했을 때의 결과를 알려 주세요.
+    validations:
+      required: true

@@ -1,8 +1,8 @@
 import Foundation
 import UniformTypeIdentifiers
 
-enum SupportedFormat: String, CaseIterable, Identifiable {
-    case pdf, png, jpeg
+enum SupportedFormat: String, CaseIterable, Identifiable, Sendable {
+    case pdf, png, jpeg, docx, hwp
 
     var id: String { rawValue }
     var displayName: String {
@@ -10,6 +10,8 @@ enum SupportedFormat: String, CaseIterable, Identifiable {
         case .pdf: "PDF"
         case .png: "PNG"
         case .jpeg: "JPG"
+        case .docx: "Word (.docx)"
+        case .hwp: "한글 (.hwp)"
         }
     }
     var fileExtension: String { rawValue == "jpeg" ? "jpg" : rawValue }
@@ -18,31 +20,39 @@ enum SupportedFormat: String, CaseIterable, Identifiable {
         case .pdf: .pdf
         case .png: .png
         case .jpeg: .jpeg
+        case .docx: UTType(filenameExtension: "docx") ?? .data
+        case .hwp: UTType(filenameExtension: "hwp") ?? .data
         }
     }
 }
 
-struct InputFile: Identifiable, Hashable {
+struct InputFile: Identifiable, Hashable, Sendable {
     let id = UUID()
     let url: URL
     let detectedType: UTType?
 
     var fileName: String { url.lastPathComponent }
+    var isHWP: Bool { url.pathExtension.lowercased() == "hwp" }
+    var isWord: Bool {
+        url.pathExtension.lowercased() == "docx" ||
+        detectedType?.identifier == "org.openxmlformats.wordprocessingml.document"
+    }
     var sourceFormat: String {
-        detectedType?.localizedDescription ?? url.pathExtension.uppercased()
+        isHWP ? "한글 문서 (HWP)" : (detectedType?.localizedDescription ?? url.pathExtension.uppercased())
     }
 }
 
-struct ConversionRequest {
+struct ConversionRequest: Sendable {
     let input: InputFile
     let outputFormat: SupportedFormat
     let outputDirectory: URL
 }
 
-struct ConversionResult: Identifiable {
+struct ConversionResult: Identifiable, Sendable {
     let id = UUID()
     let input: URL
     let output: URL
+    var notice: String? = nil
 }
 
 enum ConversionError: LocalizedError {

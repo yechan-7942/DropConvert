@@ -1,0 +1,47 @@
+name: 변환 실패 또는 글자·서식 문제
+description: 파일이 변환되지 않거나 글자·표·배치가 달라지는 문제를 제보합니다.
+title: "[변환] "
+body:
+  - type: markdown
+    attributes:
+      value: 개인정보가 있는 원본 문서는 올리지 마세요. 필요하면 내용을 지운 최소 예제나 민감한 부분을 가린 화면을 첨부해 주세요.
+  - type: input
+    id: version
+    attributes:
+      label: DropConvert 버전
+      placeholder: v0.1.0-beta
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS 버전과 Mac 칩
+      placeholder: macOS 버전 / M1, M2, M3, Intel 등
+    validations:
+      required: true
+  - type: input
+    id: conversion
+    attributes:
+      label: 입력 형식 → 출력 형식
+      placeholder: DOCX → HWP
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 순서
+      description: 어떤 파일을 선택하고 어떤 버튼을 눌렀는지 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 기대한 결과와 실제 결과
+      description: 글자 누락, 네모 글자, 표·쪽 배치 차이 등을 구체적으로 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: 오류 문구와 추가 정보
+      description: 문서 도구 설치 여부와 글꼴 대체 안내가 있었는지도 적어 주세요.
